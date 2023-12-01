@@ -40,19 +40,19 @@ class Biorhythm
      */
     private int $year;
     
-	/**
+    /**
      * Target day.
      */
-	private int $targetDay;
+    private int $targetDay;
 	
-	/**
+    /**
      * Target month.
      *
      * @var int
      */
     private int $targetMonth;
     
-	/**
+    /**
      * Target year.
      *
      * @var int
@@ -60,39 +60,39 @@ class Biorhythm
     private int $targetYear;
     
     /**
-	 * Birthday date (Unix time in seconds noon)
+     * Birthday date (Unix time in seconds noon)
      *
      * @var int
      */
-	private int $birthDate;
+    private int $birthDate;
 
-	/**
-	 * Target local noon (seconds). [default: today's noon]
+    /**
+     * Target local noon (seconds). [default: today's noon]
      *
      * @var int
      */
-	private int $targetNoon;
+    private int $targetNoon;
 	
-	/**
-	 * Time passed since birthdate noon till target day (in days)
+    /**
+     * Time passed since birthdate noon till target day (in days)
      *
      * @var float
      */
-	private float $daysPassed;
+    private float $daysPassed;
 	
-	/**
-	 * var containing messages, errors, etc.
+    /**
+     * var containing messages, errors, etc.
      *
      * @var int
      */
-	private  array $messages = [];
+    private  array $messages = [];
 	
-	/**
-	 * Resulting status - true (all OK) or false (something wnt wrong).
+    /**
+     * Resulting status - true (all OK) or false (something wnt wrong).
      *
      * @var bool
      */
-	private bool $status = true;
+    private bool $status = true;
 	
 
     public function __construct(int $day, int $month, int $year, $targetDay = null, $targetMonth = null, $targetYear = null)
@@ -116,7 +116,7 @@ class Biorhythm
      *
      * @return mixed Formated results.
      */
-	public function run()
+    public function run()
     {
         // Validate input data.
 		if(!$this->validateDate()){
@@ -136,7 +136,7 @@ class Biorhythm
      *
      * @return void
      */
-	private function passedDays(): void
+    private function passedDays(): void
     {
         // Special case: target date is birthdate.
         if ($this->birthDate == $this->targetNoon) {
@@ -161,52 +161,52 @@ class Biorhythm
         // Calculate delta days and take care about before/after 1.1.1970 times.
         
         // Case birth date before Unix era and target after, or oposite.
-		if ( ($this->birthDate <= 0 && $this->targetNoon >= 0) || ($this->birthDate >= 0 && $this->targetNoon >= 0) ) { 
+	if ( ($this->birthDate <= 0 && $this->targetNoon >= 0) || ($this->birthDate >= 0 && $this->targetNoon >= 0) ) { 
 			$this->daysPassed = round(($birthDate + $targetNoon) / 86400); // an day = 86400 seconds.
 echo "1\n";
-		// Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
-		} else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate > $this->targetNoon) { 
+	// Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
+	} else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate > $this->targetNoon) { 
 			$this->daysPassed = round(($birthDate - $targetNoon) / 86400); // an day = 86400 seconds.
 echo "2\n";
-		} else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate < $this->targetNoon) { 
+	} else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate < $this->targetNoon) { 
 			$this->daysPassed = round(($this->targetNoon + $this->birthDate) / 86400); // an day = 86400 seconds.
 echo "3\n";
-		} else if ($this->birthDate >= 0 && $this->targetNoon >= 0 && $this->birthDate > $this->targetNoon) { 
+	} else if ($this->birthDate >= 0 && $this->targetNoon >= 0 && $this->birthDate > $this->targetNoon) { 
 			$this->daysPassed = round(($this->birthDate - $this->targetNoon) / 86400); // an day = 86400 seconds.
 echo "4\n";
-		} else {
+	} else {
 			$this->daysPassed = round(($this->targetNoon - $this->birthDate) / 86400);
 echo "5\n";
-		}
-	 }
+	}
+    }
  
     /**
      * Validate date (for resonable times)
      *
      * @return bool
      */
-	private function validateDate(): bool
+    private function validateDate(): bool
     {
         $non31DausMonths = [2, 4, 6, 9, 11];
         $this->status = false;
 
-		//Does selected month contain 31 days?
-		if (($this->day == '31' || $this->targetDay == 31)&& (!in_array($this->month, $non31DausMonths))) {
+	//Does selected month contain 31 days?
+	if (($this->day == '31' || $this->targetDay == 31)&& (!in_array($this->month, $non31DausMonths))) {
 			$this->messages['error'] =  "Invalid date.<br>{$this->month} or {$this->targetMonth}. have not 31 day.<br>";
             return false;
         // Check februarry - speciffic (28 or 29 days).
-		} elseif (($this->month == '2' && ($this->day > '28' || $this->targetDay > '28') && ($this->year % 4 != '0')) || ($this->month == '2' && ($this->day > '29' || $this->targetDay > '29'))) { 
+	} elseif (($this->month == '2' && ($this->day > '28' || $this->targetDay > '28') && ($this->year % 4 != '0')) || ($this->month == '2' && ($this->day > '29' || $this->targetDay > '29'))) { 
 			$this->messages['error'] = "Invalid date.<br>Selected February contains not $this->day dayas.<br>";
             return false;
         // BC?.
-		} elseif ($this->year < 0 || $this->targetYear < 0) { 
+	} elseif ($this->year < 0 || $this->targetYear < 0) { 
 			$this->messages['error'] = "Invalid year: " . $this->year . " .<br>Yeares BC not allowed (for now).<br>";
             return false;
         }
         
         $this->status = true;
         return true;
-	}
+    }
 
     /**
      * Calculate results.
@@ -219,14 +219,14 @@ echo "5\n";
     private function getResult(): array
     {
         // Find delta in the target day (floor to get vaues in target day between 0 and 1 ~ not necessary). 
-		$deltaIntellectual = ($this->daysPassed/33)-floor($this->daysPassed/33);
-		$deltaEmotional = ($this->daysPassed/28)-floor($this->daysPassed/28);
-		$detaPhysical = ($this->daysPassed/23)-floor($this->daysPassed/23);
+	$deltaIntellectual = ($this->daysPassed/33)-floor($this->daysPassed/33);
+	$deltaEmotional = ($this->daysPassed/28)-floor($this->daysPassed/28);
+	$detaPhysical = ($this->daysPassed/23)-floor($this->daysPassed/23);
 		
-		// Calculate biorhythms
-		$intellectual = round(sin(deg2rad(($deltaIntellectual)*360)),2);
-		$emotional = round(sin(deg2rad(($deltaEmotional)*360)),2);
-		$physical = round(sin(deg2rad(($detaPhysical)*360)),2);
+	// Calculate biorhythms
+	$intellectual = round(sin(deg2rad(($deltaIntellectual)*360)),2);
+	$emotional = round(sin(deg2rad(($deltaEmotional)*360)),2);
+	$physical = round(sin(deg2rad(($detaPhysical)*360)),2);
 
         return [
                 'values'=>[
@@ -256,7 +256,5 @@ echo "5\n";
             case 'json':
                 return json_encode($result);
         }
-    
     }
 }
-
