@@ -163,11 +163,11 @@ class Biorhythm
         // Case birth date before Unix era and target after, or oposite.
         if ( ($this->birthDate <= 0 && $this->targetNoon >= 0) || ($this->birthDate >= 0 && $this->targetNoon >= 0) ) { 
             $this->daysPassed = round(($birthDate + $targetNoon) / 86400); // an day = 86400 seconds.
-	// Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
+	    // Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
         } else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate > $this->targetNoon) { 
             $this->daysPassed = round(($birthDate - $targetNoon) / 86400); // an day = 86400 seconds.
         } else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate < $this->targetNoon) { 
-            $this->daysPassed = round(($this->targetNoon + $this->birthDate) / 86400); // an day = 86400 seconds.
+            $this->daysPassed = round(($this->targetNoon - $this->birthDate) / 86400); // an day = 86400 seconds.
         } else if ($this->birthDate >= 0 && $this->targetNoon >= 0 && $this->birthDate > $this->targetNoon) { 
             $this->daysPassed = round(($this->birthDate - $this->targetNoon) / 86400); // an day = 86400 seconds.
         } else {
@@ -232,8 +232,8 @@ class Biorhythm
                 'targetNoon' => $this->targetNoon,
                 'daysPassed' => $this->daysPassed,
                 ], 
-                 'msg'=>$this->messages, 
-                 'status'=>$this->status,
+                'msg'=>$this->messages, 
+                'status'=>$this->status,
             ];
     }
     
