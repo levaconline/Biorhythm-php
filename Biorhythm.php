@@ -97,18 +97,18 @@ class Biorhythm
 
     public function __construct(int $day, int $month, int $year, $targetDay = null, $targetMonth = null, $targetYear = null)
     {
-	$this->day = $day;
-	$this->month = $month;
-	$this->year = $year;
+        $this->day = $day;
+        $this->month = $month;
+        $this->year = $year;
 		
-	// If not set default is today as target day.
-	$this->targetDay = $targetDay ?? date('d');
-	$this->targetMonth = $targetMonth ?? date('m');
-	$this->targetYear = $targetYear ?? date('Y');
+        // If not set default is today as target day.
+        $this->targetDay = $targetDay ?? date('d');
+        $this->targetMonth = $targetMonth ?? date('m');
+        $this->targetYear = $targetYear ?? date('Y');
 		
-	// Convert to unix ts.
-	$this->birthDate = mktime( 12, 0, 0, $this->month, $this->day, $this->year); // Birth date - noon.
-	$this->targetNoon = mktime( 12, 0, 0, $this->targetMonth, $this->targetDay, $this->targetYear); // Target date - noon.
+        // Convert to unix ts.
+        $this->birthDate = mktime( 12, 0, 0, $this->month, $this->day, $this->year); // Birth date - noon.
+        $this->targetNoon = mktime( 12, 0, 0, $this->targetMonth, $this->targetDay, $this->targetYear); // Target date - noon.
     }
 
     /**
@@ -119,9 +119,9 @@ class Biorhythm
     public function run()
     {
         // Validate input data.
-	if(!$this->validateDate()){
-	    return $this->result(['values'=>[], 'msg'=>$this->messages, 'status'=>$this->status]);
-	}
+        if(!$this->validateDate()){
+            return $this->result(['values'=>[], 'msg'=>$this->messages, 'status'=>$this->status]);
+        }
 		
         $this->passedDays(); // In days.
         #$graph = new Graph($this->getResult());
@@ -161,18 +161,18 @@ class Biorhythm
         // Calculate delta days and take care about before/after 1.1.1970 times.
         
         // Case birth date before Unix era and target after, or oposite.
-	if ( ($this->birthDate <= 0 && $this->targetNoon >= 0) || ($this->birthDate >= 0 && $this->targetNoon >= 0) ) { 
-	    $this->daysPassed = round(($birthDate + $targetNoon) / 86400); // an day = 86400 seconds.
+        if ( ($this->birthDate <= 0 && $this->targetNoon >= 0) || ($this->birthDate >= 0 && $this->targetNoon >= 0) ) { 
+            $this->daysPassed = round(($birthDate + $targetNoon) / 86400); // an day = 86400 seconds.
 	// Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
-	} else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate > $this->targetNoon) { 
-	    $this->daysPassed = round(($birthDate - $targetNoon) / 86400); // an day = 86400 seconds.
-	} else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate < $this->targetNoon) { 
-	    $this->daysPassed = round(($this->targetNoon + $this->birthDate) / 86400); // an day = 86400 seconds.
-	} else if ($this->birthDate >= 0 && $this->targetNoon >= 0 && $this->birthDate > $this->targetNoon) { 
-	    $this->daysPassed = round(($this->birthDate - $this->targetNoon) / 86400); // an day = 86400 seconds.
-	} else {
-	    $this->daysPassed = round(($this->targetNoon - $this->birthDate) / 86400);
-	}
+        } else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate > $this->targetNoon) { 
+            $this->daysPassed = round(($birthDate - $targetNoon) / 86400); // an day = 86400 seconds.
+        } else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate < $this->targetNoon) { 
+            $this->daysPassed = round(($this->targetNoon + $this->birthDate) / 86400); // an day = 86400 seconds.
+        } else if ($this->birthDate >= 0 && $this->targetNoon >= 0 && $this->birthDate > $this->targetNoon) { 
+            $this->daysPassed = round(($this->birthDate - $this->targetNoon) / 86400); // an day = 86400 seconds.
+        } else {
+            $this->daysPassed = round(($this->targetNoon - $this->birthDate) / 86400);
+        }
     }
  
     /**
@@ -185,17 +185,17 @@ class Biorhythm
         $non31DausMonths = [2, 4, 6, 9, 11];
         $this->status = false;
 
-	//Does selected month contain 31 days?
-	if (($this->day == '31' || $this->targetDay == 31)&& (!in_array($this->month, $non31DausMonths))) {
-	    $this->messages['error'] =  "Invalid date.<br>{$this->month} or {$this->targetMonth}. have not 31 day.<br>";
+        //Does selected month contain 31 days?
+        if (($this->day == '31' || $this->targetDay == 31)&& (!in_array($this->month, $non31DausMonths))) {
+            $this->messages['error'] =  "Invalid date.<br>{$this->month} or {$this->targetMonth}. have not 31 day.<br>";
             return false;
         // Check februarry - speciffic (28 or 29 days).
-	} elseif (($this->month == '2' && ($this->day > '28' || $this->targetDay > '28') && ($this->year % 4 != '0')) || ($this->month == '2' && ($this->day > '29' || $this->targetDay > '29'))) { 
-	    $this->messages['error'] = "Invalid date.<br>Selected February contains not $this->day dayas.<br>";
+        } elseif (($this->month == '2' && ($this->day > '28' || $this->targetDay > '28') && ($this->year % 4 != '0')) || ($this->month == '2' && ($this->day > '29' || $this->targetDay > '29'))) { 
+            $this->messages['error'] = "Invalid date.<br>Selected February contains not $this->day dayas.<br>";
             return false;
         // BC?.
-	} elseif ($this->year < 0 || $this->targetYear < 0) { 
-	    $this->messages['error'] = "Invalid year: " . $this->year . " .<br>Yeares BC not allowed (for now).<br>";
+        } elseif ($this->year < 0 || $this->targetYear < 0) { 
+            $this->messages['error'] = "Invalid year: " . $this->year . " .<br>Yeares BC not allowed (for now).<br>";
             return false;
         }
         
