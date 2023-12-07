@@ -44,7 +44,7 @@ class Biorhythm
      * Target day.
      */
     private int $targetDay;
-	
+    
     /**
      * Target month.
      *
@@ -72,40 +72,40 @@ class Biorhythm
      * @var int
      */
     private int $targetNoon;
-	
+    
     /**
      * Time passed since birthdate noon till target day (in days)
      *
      * @var float
      */
     private float $daysPassed;
-	
+    
     /**
      * var containing messages, errors, etc.
      *
      * @var int
      */
     private  array $messages = [];
-	
+    
     /**
      * Resulting status - true (all OK) or false (something wnt wrong).
      *
      * @var bool
      */
     private bool $status = true;
-	
+    
 
     public function __construct(int $day, int $month, int $year, $targetDay = null, $targetMonth = null, $targetYear = null)
     {
         $this->day = $day;
         $this->month = $month;
         $this->year = $year;
-		
+        
         // If not set default is today as target day.
         $this->targetDay = $targetDay ?? date('d');
         $this->targetMonth = $targetMonth ?? date('m');
         $this->targetYear = $targetYear ?? date('Y');
-		
+        
         // Convert to unix ts.
         $this->birthDate = mktime( 12, 0, 0, $this->month, $this->day, $this->year); // Birth date - noon.
         $this->targetNoon = mktime( 12, 0, 0, $this->targetMonth, $this->targetDay, $this->targetYear); // Target date - noon.
@@ -122,11 +122,11 @@ class Biorhythm
         if(!$this->validateDate()){
             return $this->result(['values'=>[], 'msg'=>$this->messages, 'status'=>$this->status]);
         }
-		
+        
         $this->passedDays(); // In days.
         #$graph = new Graph($this->getResult());
         #$graph->drawGraph();
-	return $this->result($this->getResult());
+    return $this->result($this->getResult());
     }
 
     /**
@@ -163,7 +163,7 @@ class Biorhythm
         // Case birth date before Unix era and target after, or oposite.
         if ( ($this->birthDate <= 0 && $this->targetNoon >= 0) || ($this->birthDate >= 0 && $this->targetNoon >= 0) ) { 
             $this->daysPassed = round(($birthDate + $targetNoon) / 86400); // an day = 86400 seconds.
-	    // Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
+        // Case: Both birth date and target date are before Unix era or both are after 0 Unix time.
         } else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate > $this->targetNoon) { 
             $this->daysPassed = round(($birthDate - $targetNoon) / 86400); // an day = 86400 seconds.
         } else if ($this->birthDate <= 0 && $this->targetNoon <= 0 && $this->birthDate < $this->targetNoon) { 
@@ -214,14 +214,14 @@ class Biorhythm
     private function getResult(): array
     {
         // Find delta in the target day (floor to get vaues in target day between 0 and 1 ~ not necessary). 
-	$deltaIntellectual = ($this->daysPassed/33)-floor($this->daysPassed/33);
-	$deltaEmotional = ($this->daysPassed/28)-floor($this->daysPassed/28);
-	$detaPhysical = ($this->daysPassed/23)-floor($this->daysPassed/23);
-		
-	// Calculate biorhythms
-	$intellectual = round(sin(deg2rad(($deltaIntellectual)*360)),2);
-	$emotional = round(sin(deg2rad(($deltaEmotional)*360)),2);
-	$physical = round(sin(deg2rad(($detaPhysical)*360)),2);
+    $deltaIntellectual = ($this->daysPassed/33)-floor($this->daysPassed/33);
+    $deltaEmotional = ($this->daysPassed/28)-floor($this->daysPassed/28);
+    $detaPhysical = ($this->daysPassed/23)-floor($this->daysPassed/23);
+        
+    // Calculate biorhythms
+    $intellectual = round(sin(deg2rad(($deltaIntellectual)*360)),2);
+    $emotional = round(sin(deg2rad(($deltaEmotional)*360)),2);
+    $physical = round(sin(deg2rad(($detaPhysical)*360)),2);
 
         return [
             'values'=>[
