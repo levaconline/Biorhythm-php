@@ -1,14 +1,12 @@
 <?php 
 
-#include 'Graph.php';
-
 /**
  * Calculate biorhythm for specified day and return results in specified format.
  * Can be used as CLI or part of web app/API.
  * 
  * PHP 8.2.12
  * 
- * @author  Aleksandar Todorovic <levaconline@gmail.com> <aleksandar.todorovic.xyz@gmail.com> <aleksandar.todorovic.777@yandex.com>
+ * @author Aleksandar Todorovic <levaconline@gmail.com> <aleksandar.todorovic.xyz@gmail.com> <aleksandar.todorovic.777@yandex.com>
  */
 class Biorhythm 
 {
