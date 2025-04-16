@@ -40,7 +40,7 @@ How to use?
 >var_dump($biorhythm);
 >
 
-**In short:**
+**In short:**  
 
 Biorhyrhm for current day (format: day month year):  
 php Biorhythm.php 12 1 1969 
@@ -48,10 +48,12 @@ php Biorhythm.php 12 1 1969
 Biorhyrhm for specified date (format: day month year target_day target_month target_year):  
 php Biorhythm.php 12 1 1969 2 7 1969  
   
+**CLI result:**  
+![Resulting inage.](https://levac-online.com/biorhythm.png)  
 
 
 
-**2. In PHP app:**
+**2. In PHP app:**  
 Make form and pass the parans from form, It can be say something like following:  
 
 // Example: CALL via request
@@ -74,3 +76,4 @@ Make form and pass the parans from form, It can be say something like following:
 >
 >$biorhythm = $bio->run();
 >
+
