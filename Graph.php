@@ -703,6 +703,7 @@ class Graph
             return $data;
         } elseif ((float)$angle > 180.0 && (float)$angle < 300.0) {
             // TODO: Cover rotated texts.
+            return false;
         }
     }
         
@@ -713,7 +714,7 @@ class Graph
      */
     private function marginLeftRight(): int
     {
-        return $this->convertPercentToPixels((float)$this->marginLeftRightPercents, $this->canvasWidth);
+        return (int)$this->convertPercentToPixels((float)$this->marginLeftRightPercents, $this->canvasWidth);
     }
     
     /**
@@ -723,7 +724,7 @@ class Graph
      */
     private function marginTop(): int
     {
-        return (int) round($this->convertPercentToPixels((float)$this->marginTopPercents, $this->canvasHeight));
+        return ceil($this->convertPercentToPixels((float)$this->marginTopPercents, $this->canvasHeight));
     }
     
     /**
@@ -731,9 +732,9 @@ class Graph
      *
      * @return float.
      */
-    private function marginBottom(): float
+    private function marginBottom(): int
     {
-        return $this->convertPercentToPixels((float)$this->marginBottomPercents, $this->canvasHeight);
+        return (int)$this->convertPercentToPixels((float)$this->marginBottomPercents, $this->canvasHeight);
     }
     
     /**
